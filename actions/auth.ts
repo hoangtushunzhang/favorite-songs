@@ -1,7 +1,7 @@
 
 import { RegisterFormSchema } from "@/lib/rules";
-import { supabase } from "@/lib/supabase";
 import { RegisterState } from "@/types";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { redirect } from "next/navigation";
 
 export async function register(state: RegisterState | undefined, formData: FormData): Promise<RegisterState> {
@@ -22,6 +22,8 @@ export async function register(state: RegisterState | undefined, formData: FormD
     }
 
     const { email, password } = validatedFields.data;
+
+    const supabase = createClientComponentClient();
 
     const { error } = await supabase.auth.signUp({
         email,

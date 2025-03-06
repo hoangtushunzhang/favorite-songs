@@ -1,10 +1,12 @@
 "use client";
-import { supabase } from "@/lib/supabase";
+import ShinyText from "@/app/components/ShinyText";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
 
 const LogOutButton = () => {
   const router = useRouter();
   const handleLogout = async () => {
+    const supabase = createClientComponentClient();
     const { error } = await supabase.auth.signOut();
 
     if (!error) {
@@ -13,10 +15,19 @@ const LogOutButton = () => {
       console.log(error);
     }
   };
+  
   return (
     <div>
-      <button className="cursor-pointer text-xl" onClick={handleLogout}>
-        Log Out
+      <button
+        className="cursor-pointer text-md bg-black/90 px-3 py-1 rounded-full  "
+        onClick={handleLogout}
+      >
+        <ShinyText
+          text="Log out"
+          disabled={false}
+          speed={3}
+          className="custom-class"
+        />
       </button>
     </div>
   );

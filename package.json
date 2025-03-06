@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/supabase-js": "^2.49.1",
     "bcryptjs": "^3.0.2",
     "motion": "^12.4.10",

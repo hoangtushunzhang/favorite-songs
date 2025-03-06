@@ -15,22 +15,23 @@ const Header = () => {
         <div className="flex items-center justify-between shadow-md px-10 py-4">
           <motion.div whileHover={{ scale: 1.05 }}>
             <Link
-              className="font-extrabold text-3xl hover:text-blue-600 transition-all duration-200"
+              className="font-extrabold text-3xl hover:text-blue-400 transition-all duration-200"
               href={"/"}
             >
               🚀 Favorite Songs
             </Link>
           </motion.div>
-
-          <motion.div whileHover={{ scale: 1.05 }} className="flex gap-4">
+          <div className="flex items-center gap-4">
             <LogOutButton />
-            <Link
-              className="text-2xl font-extrabold hover:text-blue-600 transition-all duration-200"
-              href={"/dashboard"}
-            >
-              Dashboard
-            </Link>
-          </motion.div>
+            <motion.div whileHover={{ scale: 1.05 }} className="">
+              <Link
+                className="text-2xl font-extrabold hover:text-blue-600 transition-all duration-200"
+                href={"/dashboard"}
+              >
+                Dashboard
+              </Link>
+            </motion.div>
+          </div>
         </div>
       </motion.nav>
     </header>

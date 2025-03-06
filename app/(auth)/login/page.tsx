@@ -1,32 +1,51 @@
 "use client";
 
-import { useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const supabase = createClientComponentClient();
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        setIsLoggedIn(true);
+        router.push("/");
+      }
+    };
+    checkSession();
+  }, [router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
+    const supabase = createClientComponentClient();
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
     if (error) {
-      return setError("Invalid email or password!");
+      setError(error.message);
+    } else {
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        setIsLoggedIn(true);
+        router.push("/");
+      }
     }
-
-    router.push("/dashboard");
   };
 
+  if (isLoggedIn) return null;
   return (
     <div className="w-full max-w-md mx-auto p-6 m-8 bg-white shadow-lg rounded-lg">
       <h1 className="text-3xl font-bold m-6 text-center">Login</h1>
