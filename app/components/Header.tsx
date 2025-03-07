@@ -21,7 +21,7 @@ const Header = () => {
               🚀 Favorite Songs
             </Link>
           </motion.div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 px-4 py-2 bg-[#F4F4F4] rounded-lg">
             <LogOutButton />
             <motion.div whileHover={{ scale: 1.05 }} className="">
               <Link

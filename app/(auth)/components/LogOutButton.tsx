@@ -1,5 +1,6 @@
 "use client";
-import ShinyText from "@/app/components/ShinyText";
+
+import ShinyText from "@/app/_components/ShinyText";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
 
