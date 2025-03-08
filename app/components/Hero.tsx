@@ -10,30 +10,34 @@ import RotatingText from "../_components/RotatingText";
 import TextPressure from "../_components/TextPressure";
 import Particles from "../_components/Particles";
 import Dock from "../_components/Dock";
+import { useRouter } from "next/navigation";
 
 const Hero = () => {
+  const router = useRouter();
+
   const items = [
     {
       icon: <VscHome size={18} />,
       label: "Home",
-      onClick: () => alert("Home!"),
+      onClick: () => router.push("/"),
     },
     {
       icon: <VscArchive size={18} />,
       label: "Love Songs",
-      onClick: () => alert("Love Songs!"),
+      onClick: () => router.push("/songs"),
     },
     {
       icon: <VscAccount size={18} />,
       label: "Profile",
-      onClick: () => alert("Profile!"),
+      onClick: () => window.open("https://shunquang.vercel.app/", "_blank"),
     },
     {
       icon: <VscSettingsGear size={18} />,
       label: "Settings",
-      onClick: () => alert("Settings!"),
+      onClick: () => router.push("/dashboard"),
     },
   ];
+
   return (
     <>
       <RotatingText
@@ -48,27 +52,7 @@ const Hero = () => {
         transition={{ type: "spring", damping: 30, stiffness: 400 }}
         rotationInterval={2000}
       />
-      <div
-        style={{
-          position: "relative",
-          height: "100px",
-          width: "60%",
-          margin: "8px auto",
-        }}
-      >
-        <TextPressure
-          text="Hello, Shun's music world!"
-          flex={true}
-          alpha={false}
-          stroke={false}
-          width={true}
-          weight={true}
-          italic={true}
-          textColor="black"
-          strokeColor="#ff0000"
-          minFontSize={36}
-        />
-      </div>
+
       <div style={{ width: "100%", height: "600px", position: "relative" }}>
         <Particles
           particleColors={["#ffffff", "#ffffff"]}
@@ -80,15 +64,41 @@ const Hero = () => {
           alphaParticles={false}
           disableRotation={false}
         />
+        <div
+          style={{
+            position: "absolute",
+            height: "auto",
+            width: "60%",
+            margin: "8px auto",
+            top: "10%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            textAlign: "center",
+            zIndex: 1,
+          }}
+        >
+          <TextPressure
+            text="Hello, Shun's music world!"
+            flex={true}
+            alpha={false}
+            stroke={false}
+            width={true}
+            weight={true}
+            italic={true}
+            textColor="black"
+            strokeColor="#ff0000"
+            minFontSize={36}
+          />
+        </div>
+
+        <Dock
+          className="absolute bottom-0"
+          items={items}
+          panelHeight={68}
+          baseItemSize={50}
+          magnification={70}
+        />
       </div>
-
-      <Dock
-        items={items}
-        panelHeight={68}
-        baseItemSize={50}
-        magnification={70}
-      />
-
     </>
   );
 };
