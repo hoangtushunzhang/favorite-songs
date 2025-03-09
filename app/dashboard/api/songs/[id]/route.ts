@@ -23,7 +23,7 @@ export async function GET(request: Request, { params }: Params) {
 
     return NextResponse.json(song, { status: 200 });
   } catch (error) {
-    console.error("❌ API Error:", error);
+    console.error("API Error:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

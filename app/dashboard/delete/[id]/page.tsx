@@ -10,7 +10,13 @@ export default function DeleteSong() {
   const router = useRouter();
 
   async function handleDelete() {
-    const { error } = await supabase.from("Songs").delete().eq("id", id);
+    const songId = Number(id); 
+  if (isNaN(songId)) {
+    console.error("Invalid song ID:", id);
+    return;
+  }
+
+  const { error } = await supabase.from("Songs").delete().eq("id", songId);
 
     if (error) {
       console.error("Failed to delete song:", error);

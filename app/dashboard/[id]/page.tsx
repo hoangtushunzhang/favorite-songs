@@ -54,8 +54,8 @@ export async function generateStaticParams() {
   return songs?.map((song) => ({ id: song.id.toString() })) || [];
 }
 
-export default async function SongDetails({ params }: { params: { id: string } }) {
-  const song = await getSong(params?.id);
+export default async function SongDetails({ params }: PageProps) {
+  const song = await getSong(params.id);
 
   if (!song) {
     notFound();

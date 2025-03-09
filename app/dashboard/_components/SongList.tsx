@@ -4,13 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-
-interface Song {
-  id: number;
-  title: string;
-  artist: string;
-  priority: string;
-}
+import { Song } from "@/types";
 
 export default function SongList() {
   const supabase = createClientComponentClient();
@@ -31,15 +25,20 @@ export default function SongList() {
     fetchSongs();
   }, [supabase]);
 
-  const filteredSongs = songs.filter((song) => {
-    const matchesSearch = song.title
-      .toLowerCase()
-      .includes(search.toLowerCase());
-    const matchesPriority = priorityFilter
-      ? song.priority === priorityFilter
-      : true;
-    return matchesSearch && matchesPriority;
-  });
+  const priorityOrder = { high: 3, medium: 2, low: 1 };
+
+  const filteredSongs = songs
+    .filter(
+      (song) =>
+        song.title.toLowerCase().includes(search.toLowerCase()) &&
+        (!priorityFilter ||
+          song.priority.toLowerCase() === priorityFilter.toLowerCase())
+    )
+    .sort(
+      (a, b) =>
+        priorityOrder[b.priority.toLowerCase() as keyof typeof priorityOrder] -
+        priorityOrder[a.priority.toLowerCase() as keyof typeof priorityOrder]
+    );
 
   return (
     <div className="max-w-3xl mx-auto p-6">
@@ -100,7 +99,9 @@ export default function SongList() {
                       : "bg-green-500"
                   }`}
                 >
-                   {song.priority.charAt(0).toUpperCase() + song.priority.slice(1)} Priority
+                  {song.priority.charAt(0).toUpperCase() +
+                    song.priority.slice(1)}{" "}
+                  Priority
                 </span>
               </Link>
 
