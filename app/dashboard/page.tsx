@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export const metadata = {
   title: "Love Songs | Dashboard",
-  description: "Quản lý danh sách bài hát yêu thích",
+  description: "Love Songs Dashboard",
 };
 
 export default function DashBoard() {

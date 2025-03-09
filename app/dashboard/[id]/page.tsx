@@ -10,12 +10,12 @@ interface Song {
   title: string;
   artist: string;
   priority: string;
-  user_id: string;
 }
 
-interface Params {
+type PageProps = {
   params: { id: string };
-}
+};
+
 
 async function getSong(id: number): Promise<Song | null> {
   const supabase = createServerComponentClient({ cookies });
@@ -33,7 +33,7 @@ async function getSong(id: number): Promise<Song | null> {
   return song;
 }
 
-export async function generateMetadata({ params }: Params) {
+export async function generateMetadata({ params }: PageProps) {
   const song = await getSong(Number(params.id));
 
   if (!song) {
@@ -50,14 +50,14 @@ export async function generateStaticParams() {
   const { data: songs, error } = await supabase.from("Songs").select("id");
 
   if (error) {
-    console.error("❌ Error fetching tickets:", error);
+    console.error("❌ Error fetching songs:", error);
     return [];
   }
 
   return songs?.map((song) => ({ id: song.id.toString() })) || [];
 }
 
-export default async function TicketDetails({ params }: Params) {
+export default async function SongDetails({ params }: PageProps) {
   const song = await getSong(Number(params.id));
 
   if (!song) {
