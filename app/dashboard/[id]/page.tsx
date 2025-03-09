@@ -7,32 +7,35 @@ import { Metadata } from "next";
 
 export const dynamicParams = true;
 
+async function getSong(id: unknown): Promise<Song | null> {
+  if (!id || typeof id !== "string" || isNaN(Number(id))) {
+    console.error("❌ Invalid song ID:", id);
+    return null;
+  }
 
-async function getSong(id: number): Promise<Song | null> {
+  const songId = Number(id);
   const supabase = createServerComponentClient({ cookies });
   const { data: song, error } = await supabase
     .from("Songs")
     .select("*")
-    .eq("id", id)
+    .eq("id", songId)
     .single();
 
-  if (error) {
-    console.error("❌ Error fetching song:", error);
+  if (error || !song) {
+    console.error("❌ Error fetching song:", error?.message || "Not found");
     return null;
   }
 
   return song;
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const song = await getSong(Number(params.id));
-
-  if (!song) {
-    return { title: "Song Not Found" };
-  }
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const song = await getSong(params?.id);
 
   return {
-    title: `Love Songs | ${song.title}`,
+    title: song ? `Love Songs | ${song.title}` : "Song Not Found",
   };
 }
 
@@ -41,7 +44,10 @@ export async function generateStaticParams() {
   const { data: songs, error } = await supabase.from("Songs").select("id");
 
   if (error) {
-    console.error("❌ Error fetching songs:", error);
+    console.error(
+      "❌ Error fetching songs:",
+      error?.message || "No songs found"
+    );
     return [];
   }
 
@@ -49,7 +55,7 @@ export async function generateStaticParams() {
 }
 
 export default async function SongDetails({ params }: PageProps) {
-  const song = await getSong(Number(params.id));
+  const song = await getSong(params?.id);
 
   if (!song) {
     notFound();
