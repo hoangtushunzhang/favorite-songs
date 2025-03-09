@@ -2,18 +2,15 @@ import { notFound } from "next/navigation";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import Link from "next/link";
-import { PageProps, Song } from "@/types";
-import { Metadata } from "next";
+import { Song } from "@/types";
 
-export const dynamicParams = true;
-
-async function getSong(id: unknown): Promise<Song | null> {
-  if (!id || typeof id !== "string" || isNaN(Number(id))) {
+async function getSong(id: string): Promise<Song | null> {
+  const songId = Number(id);
+  if (isNaN(songId)) {
     console.error("Invalid song ID:", id);
     return null;
   }
 
-  const songId = Number(id);
   const supabase = createServerComponentClient({ cookies });
   const { data: song, error } = await supabase
     .from("Songs")
@@ -22,40 +19,14 @@ async function getSong(id: unknown): Promise<Song | null> {
     .single();
 
   if (error || !song) {
-    console.error(" Error fetching song:", error?.message || "Not found");
+    console.error("Error fetching song:", error?.message || "Not found");
     return null;
   }
 
   return song;
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const song = await getSong(params.id);
-
-  return {
-    title: song ? `Love Songs | ${song.title}` : "Song Not Found",
-  };
-}
-
-export async function generateStaticParams() {
-  const supabase = createServerComponentClient({ cookies });
-  const { data: songs, error } = await supabase.from("Songs").select("id");
-
-  if (error) {
-    console.error(
-      "Error fetching songs:",
-      error?.message || "No songs found"
-    );
-    return [];
-  }
-
-  return songs?.map((song) => ({ id: song.id.toString() })) || [];
-}
-
-export default async function SongDetails({ params }: PageProps) {
-  if (!params?.id) {
-    notFound();
-  }
+export default async function SongDetails({ params }: { params: { id: string } }) {
   const song = await getSong(params.id);
 
   if (!song) {
@@ -78,8 +49,7 @@ export default async function SongDetails({ params }: PageProps) {
       >
         {song.priority} priority
       </div>
-      <Link className="mx-20 text-blue-500" href={"/dashboard"}>
-        {" "}
+      <Link className="mx-20 text-blue-500" href="/dashboard">
         Back to Dashboard
       </Link>
     </div>
