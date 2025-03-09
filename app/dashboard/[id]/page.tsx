@@ -32,7 +32,7 @@ async function getSong(id: unknown): Promise<Song | null> {
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const song = await getSong(params?.id);
+  const song = await getSong(await Promise.resolve(params?.id));
 
   return {
     title: song ? `Love Songs | ${song.title}` : "Song Not Found",
@@ -54,7 +54,7 @@ export async function generateStaticParams() {
   return songs?.map((song) => ({ id: song.id.toString() })) || [];
 }
 
-export default async function SongDetails({ params }: PageProps) {
+export default async function SongDetails({ params }: { params: { id: string } }) {
   const song = await getSong(params?.id);
 
   if (!song) {
