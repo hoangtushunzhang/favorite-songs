@@ -6,7 +6,7 @@ export type RegisterState = {
 };
 
 export type PageProps = {
-    params: { id: string };
+    readonly params: { id: string };
 };
 
 
