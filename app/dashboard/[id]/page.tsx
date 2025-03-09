@@ -9,7 +9,7 @@ export const dynamicParams = true;
 
 async function getSong(id: unknown): Promise<Song | null> {
   if (!id || typeof id !== "string" || isNaN(Number(id))) {
-    console.error("❌ Invalid song ID:", id);
+    console.error("Invalid song ID:", id);
     return null;
   }
 
@@ -22,17 +22,15 @@ async function getSong(id: unknown): Promise<Song | null> {
     .single();
 
   if (error || !song) {
-    console.error("❌ Error fetching song:", error?.message || "Not found");
+    console.error(" Error fetching song:", error?.message || "Not found");
     return null;
   }
 
   return song;
 }
 
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
-  const song = await getSong(await Promise.resolve(params?.id));
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const song = await getSong(params.id);
 
   return {
     title: song ? `Love Songs | ${song.title}` : "Song Not Found",
@@ -45,7 +43,7 @@ export async function generateStaticParams() {
 
   if (error) {
     console.error(
-      "❌ Error fetching songs:",
+      "Error fetching songs:",
       error?.message || "No songs found"
     );
     return [];
@@ -55,6 +53,9 @@ export async function generateStaticParams() {
 }
 
 export default async function SongDetails({ params }: PageProps) {
+  if (!params?.id) {
+    notFound();
+  }
   const song = await getSong(params.id);
 
   if (!song) {

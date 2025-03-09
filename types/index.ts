@@ -7,6 +7,7 @@ export type RegisterState = {
 
 export type PageProps = {
     params: { id: string };
+    searchParams?: Record<string, string | string[]>;
 };
 
 
