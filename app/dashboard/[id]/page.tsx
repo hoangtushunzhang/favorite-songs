@@ -2,19 +2,10 @@ import { notFound } from "next/navigation";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import Link from "next/link";
+import { PageProps, Song } from "@/types";
+import { Metadata } from "next";
 
 export const dynamicParams = true;
-
-interface Song {
-  id: number;
-  title: string;
-  artist: string;
-  priority: string;
-}
-
-type PageProps = {
-  params: { id: string };
-};
 
 
 async function getSong(id: number): Promise<Song | null> {
@@ -33,11 +24,11 @@ async function getSong(id: number): Promise<Song | null> {
   return song;
 }
 
-export async function generateMetadata({ params }: PageProps) {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const song = await getSong(Number(params.id));
 
   if (!song) {
-    return { song: "Song Not Found" };
+    return { title: "Song Not Found" };
   }
 
   return {
