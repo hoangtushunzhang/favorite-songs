@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Song } from "@/types";
+import { useDebounce } from "./actions/useDebounce";
+import { removeDiacritics } from "./actions/removeDeacritics";
 
 export default function SongList() {
   const supabase = createClientComponentClient();
@@ -12,6 +14,8 @@ export default function SongList() {
   const [songs, setSongs] = useState<Song[]>([]);
   const [search, setSearch] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("");
+
+  const debouncedSearch = useDebounce(search, 500);
 
   useEffect(() => {
     async function fetchSongs() {
@@ -28,12 +32,16 @@ export default function SongList() {
   const priorityOrder = { high: 3, medium: 2, low: 1 };
 
   const filteredSongs = songs
-    .filter(
-      (song) =>
-        song.title.toLowerCase().includes(search.toLowerCase()) &&
+    .filter((song) => {
+      const normalizedTitle = removeDiacritics(song.title);
+      const normalizedSearch = removeDiacritics(debouncedSearch);
+
+      return (
+        normalizedTitle.includes(normalizedSearch) &&
         (!priorityFilter ||
           song.priority.toLowerCase() === priorityFilter.toLowerCase())
-    )
+      );
+    })
     .sort(
       (a, b) =>
         priorityOrder[b.priority.toLowerCase() as keyof typeof priorityOrder] -

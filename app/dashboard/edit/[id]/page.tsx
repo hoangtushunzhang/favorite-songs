@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import GradientText from "@/app/_components/GradientText";
 
 export default function EditTicket() {
   const { id } = useParams();
@@ -91,6 +93,18 @@ export default function EditTicket() {
           {loading ? "Updating..." : "Update Song"}
         </Button>
       </form>
+      <div className="fixed bottom-4 right-4 mt-6 flex justify-center">
+        <Link className="text-blue-500 hover:underline" href={"/dashboard"}>
+          <GradientText
+            colors={["#40ffaa", "#4079ff", "#40ffaa", "#4079ff", "#40ffaa"]}
+            animationSpeed={3}
+            showBorder={true}
+            className="custom-class p-3"
+          >
+            Back to Dashboard
+          </GradientText>
+        </Link>
+      </div>
     </div>
   );
 }

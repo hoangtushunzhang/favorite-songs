@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import SongList from "./_components/SongList";
 import Link from "next/link";
+import GradientText from "../_components/GradientText";
 
 export const metadata = {
   title: "Love Songs | Dashboard",
@@ -22,7 +23,14 @@ export default function DashBoard() {
       </Suspense>
       <div className="fixed bottom-4 right-4 mt-6 flex justify-center">
         <Link className="text-blue-500 hover:underline" href={"/"}>
-          Back to HomePage
+          <GradientText
+            colors={["#40ffaa", "#4079ff", "#40ffaa", "#4079ff", "#40ffaa"]}
+            animationSpeed={3}
+            showBorder={true}
+            className="custom-class p-3"
+          >
+            Back to Home Page
+          </GradientText>
         </Link>
       </div>
     </main>

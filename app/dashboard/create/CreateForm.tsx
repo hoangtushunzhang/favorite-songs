@@ -26,7 +26,7 @@ export default function CreateForm() {
       const result = await res.json();
 
       if (result.error) {
-        console.error("❌ API Error:", result.error);
+        console.error("API Error:", result.error);
       } else {
         setTitle("");
         setArtist("");
@@ -35,7 +35,7 @@ export default function CreateForm() {
         router.push("/dashboard");
       }
     } catch (error) {
-      console.error("❌ Fetch Error:", error);
+      console.error("Fetch Error:", error);
     } finally {
       setIsLoading(false);
     }
